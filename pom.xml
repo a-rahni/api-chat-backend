@@ -53,11 +53,14 @@
 		</dependency>
 
 		<!-- added dep -->
-		<dependency> <!-- Pour la configuration de swagger  -->
+		<!-- Pour la configuration de swagger  -->
+		<!--
+		<dependency>
 			<groupId>io.springfox</groupId>
 			<artifactId>springfox-boot-starter</artifactId>
 			<version>3.0.0</version>
 		</dependency>
+		-->
 
 		<dependency>
 			<groupId>org.mapstruct</groupId>
