@@ -1,13 +1,13 @@
-package fr.m2i.apitchat;
+package fr.m2i.apichat;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class ApitchatApplication {
+public class ApichatApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(ApitchatApplication.class, args);
+		SpringApplication.run(ApichatApplication.class, args);
 	}
 
 }
