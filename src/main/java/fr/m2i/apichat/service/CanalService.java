@@ -1,5 +1,6 @@
 package fr.m2i.apichat.service;
 
+import fr.m2i.apichat.dto.CanalMapper;
 import fr.m2i.apichat.exception.AlreadyExistsException;
 import fr.m2i.apichat.exception.NotFoundException;
 import fr.m2i.apichat.model.Canal;
@@ -32,6 +33,9 @@ public class CanalService implements  ICanalService{
 
     @Override
     public Canal save(Canal canal) {
+        // check que l'id est non fourni, sinon on risque de modifier un existant
+        // ou set id to null
+
         Canal canalWithName = null;
         if (canal!= null){
             canalWithName = repo.findByName(canal.getName());
@@ -46,7 +50,7 @@ public class CanalService implements  ICanalService{
     @Override
     public Canal update(Long id, Canal canalContent) {
         Canal canalToUpdate = findById(id);
-        //CanalMapper.copy(found, canalContent); to do
+        CanalMapper.copy(canalToUpdate, canalContent);
         return repo.save(canalToUpdate);
     }
 

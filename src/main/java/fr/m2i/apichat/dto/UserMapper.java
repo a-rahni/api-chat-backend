@@ -5,7 +5,7 @@ import fr.m2i.apichat.model.User;
 
 public class UserMapper {
 
-    /*
+
     public static User  copy(User user, User userContent){
         if(user == null || userContent ==null){
             return null;
@@ -34,6 +34,6 @@ public class UserMapper {
         return user;
 
     }
-    */
+
 
 }
