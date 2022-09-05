@@ -24,7 +24,7 @@ public class Canal {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name="name", nullable = false)
+    @Column(name="name", unique = true, nullable = false)
     private  String name;
 
     @Column(name="description")
@@ -45,4 +45,11 @@ public class Canal {
     private List<Message> messages=new ArrayList<>();
 
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 }
