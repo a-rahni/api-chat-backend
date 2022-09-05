@@ -26,11 +26,11 @@ public class Message {
     private String content;
 
     @Temporal(TemporalType.DATE)
-    @Column(name="created_at", nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    @Column(name="created_at", updatable = false, nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private Date createdAt;
 
     @Temporal(TemporalType.TIME)
-    @Column(name="created_at_time", nullable = false, columnDefinition="TIME DEFAULT CURRENT_TIME")
+    @Column(name="created_at_time",updatable = false, nullable = false, columnDefinition="TIME DEFAULT CURRENT_TIME")
     private Date CreatedAtTime;
 
     @LastModifiedDate
