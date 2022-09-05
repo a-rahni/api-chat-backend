@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public  interface CanalRepository extends JpaRepository<Canal,Long> {
-    Canal findCanalByName(String roomName);
+    Canal findByName(String name);
 }
