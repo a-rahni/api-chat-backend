@@ -34,9 +34,12 @@ public class Canal {
     @Column(name="created_at", nullable = false, updatable = false, columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private Date createdAt;
 
-    @LastModifiedDate
-    @Column(name="updated_at", nullable = false)
-    private LocalDateTime updatedAt;
+    //@LastModifiedDate
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name="updated_at", nullable = false, columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    private Date updatedAt;
+    //private LocalDateTime updatedAt;
+
 
     @ManyToMany(mappedBy="canaux")
     private List<User> users=new ArrayList<>();
@@ -44,12 +47,4 @@ public class Canal {
     @OneToMany(mappedBy = "canal", fetch=FetchType.LAZY)
     private List<Message> messages=new ArrayList<>();
 
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 }

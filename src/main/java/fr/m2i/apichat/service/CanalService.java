@@ -4,20 +4,27 @@ import fr.m2i.apichat.dto.CanalMapper;
 import fr.m2i.apichat.exception.AlreadyExistsException;
 import fr.m2i.apichat.exception.NotFoundException;
 import fr.m2i.apichat.model.Canal;
+import fr.m2i.apichat.model.Message;
 import fr.m2i.apichat.model.User;
 import fr.m2i.apichat.repository.CanalRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 @Service
 public class CanalService implements  ICanalService{
     private final CanalRepository repo;
+    private final IUserService userService;
+    private final IMessageService messageService;
 
     @Autowired
-    public CanalService(CanalRepository repo){
+    public CanalService(CanalRepository repo, IUserService userService, IMessageService messageService){
         this.repo = repo;
+        this.userService=userService;
+        this.messageService= messageService;
     }
 
     @Override
@@ -29,6 +36,15 @@ public class CanalService implements  ICanalService{
     public Canal findById(Long id) {
        return repo.findById(id).orElseThrow(()->
        {throw new NotFoundException("Canal with id: "+ id + " was not found"); });
+    }
+
+    @Override
+    public Canal findByName(String name) {
+        Canal canal= repo.findByName(name);
+        if(canal == null) {
+            throw new NotFoundException("Canal with name: "+ name + " was not found");
+        }
+        return canal;
     }
 
     @Override
@@ -44,6 +60,15 @@ public class CanalService implements  ICanalService{
         if(canalWithName != null){
             throw new AlreadyExistsException(" Canal with name : "+ canalWithName.getName() + "already exists");
         }
+
+        if(canal != null){
+            if(canal.getCreatedAt() == null){
+                canal.setCreatedAt(new Date());
+            }
+            if(canal.getUpdatedAt() == null){
+                canal.setUpdatedAt(new Date());
+            }
+        }
         return repo.save(canal);
     }
 
@@ -51,6 +76,9 @@ public class CanalService implements  ICanalService{
     public Canal update(Long id, Canal canalContent) {
         Canal canalToUpdate = findById(id);
         CanalMapper.copy(canalToUpdate, canalContent);
+        if(canalToUpdate != null && canalToUpdate.getUpdatedAt()== null){
+            canalToUpdate.setUpdatedAt(new Date());
+        }
         return repo.save(canalToUpdate);
     }
 
@@ -58,5 +86,24 @@ public class CanalService implements  ICanalService{
     public void delete(Long id) {
         Canal canalToDelete= findById(id);
         repo.delete(canalToDelete);
+    }
+
+    public Message addMessage(Long idCanal, Long idUser, Message message){
+        Canal canal= findById(idCanal);
+        User user = userService.findById(idUser);
+
+        if(message != null){
+            message.setCanal(canal);
+            message.setUser(user);
+
+            if(message.getCreatedAt() == null){
+                message.setCreatedAt(new Date());
+            }
+            if(message.getUpdatedAt() == null){
+                message.setUpdatedAt(new Date());
+            }
+            return messageService.save(message);
+        }
+        return null;
     }
 }
