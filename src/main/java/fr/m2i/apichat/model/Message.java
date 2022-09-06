@@ -25,17 +25,19 @@ public class Message {
     @Column(name="content", nullable = false, columnDefinition = "TEXT")
     private String content;
 
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(name="created_at", updatable = false, nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private Date createdAt;
 
-    @Temporal(TemporalType.TIME)
-    @Column(name="created_at_time",updatable = false, nullable = false, columnDefinition="TIME DEFAULT CURRENT_TIME")
-    private Date CreatedAtTime;
+//    @Temporal(TemporalType.TIME)
+//    @Column(name="created_at_time",updatable = false, nullable = false, columnDefinition="TIME DEFAULT CURRENT_TIME")
+//    private Date CreatedAtTime;
 
-    @LastModifiedDate
-    @Column(name="updated_at", nullable = false)
-    private LocalDateTime updatedAt;
+    //@LastModifiedDate
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name="updated_at", nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    private Date updatedAt;
+    //private LocalDateTime updatedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn (name="user_id", nullable = false)

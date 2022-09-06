@@ -26,9 +26,9 @@ public class ServiceInitDB {
         this.messageRepo = messageRepo;
     }
     public void initCanaux(){
-        Stream.of(new Canal(null,"#General","Canal général",new Date(),LocalDateTime.now(),null,null),
-                new Canal(null,"#Room1","Room 1",new Date(),LocalDateTime.now(),null,null),
-                new Canal(null,"#Room2","Room 2",new Date(),LocalDateTime.now(),null,null)
+        Stream.of(new Canal(null,"#General","Canal général",new Date(),new Date(),null,null),
+                new Canal(null,"#Room1","Room 1",new Date(),new Date(),null,null),
+                new Canal(null,"#Room2","Room 2",new Date(),new Date(),null,null)
         ).forEach(canal -> canalRepo.save(canal));
 
     }
