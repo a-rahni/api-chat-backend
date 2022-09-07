@@ -36,7 +36,7 @@ public class Canal {
 
     //@LastModifiedDate
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name="updated_at", nullable = false, columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    @Column(name="updated_at", updatable = true, columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private Date updatedAt;
     //private LocalDateTime updatedAt;
 
@@ -44,7 +44,9 @@ public class Canal {
     @ManyToMany(mappedBy="canaux")
     private List<User> users=new ArrayList<>();
 
-    @OneToMany(mappedBy = "canal", fetch=FetchType.LAZY)
+    @OneToMany(mappedBy = "canal", fetch=FetchType.LAZY,
+                cascade = {CascadeType.REMOVE},
+                orphanRemoval = true)
     private List<Message> messages=new ArrayList<>();
 
 }

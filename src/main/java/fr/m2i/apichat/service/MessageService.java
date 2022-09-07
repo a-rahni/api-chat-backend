@@ -8,8 +8,12 @@ import fr.m2i.apichat.model.Message;
 import fr.m2i.apichat.model.User;
 import fr.m2i.apichat.repository.MessageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -34,6 +38,14 @@ public class MessageService implements  IMessageService{
         );
     }
 
+//    public Page<Message> findMessagesByCanalId(Long canalId, int page, int size){
+//        return repo.findByCanal(canalId, PageRequest.of(page,size));
+//    }
+
+    public List<Message> findMessagesByCanalId(Long canalId){
+        return repo.findByCanal(canalId);
+    }
+
     @Override
     public Message save(Message message) {
         // check que l'id est non fourni, sinon on risque de modifier un existant
@@ -45,6 +57,9 @@ public class MessageService implements  IMessageService{
     public Message update(Long id, Message messageContent) {
         Message found= findById(id);
         MessageMapper.copy(found,messageContent);
+        if(messageContent!=null && messageContent.getUpdatedAt()==null){
+            messageContent.setUpdatedAt(new Date());
+        }
         return repo.save(found);
 
     }
