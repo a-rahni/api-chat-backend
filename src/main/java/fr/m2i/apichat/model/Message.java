@@ -35,7 +35,7 @@ public class Message {
 
     //@LastModifiedDate
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name="updated_at", nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    @Column(name="updated_at", nullable = true, updatable = true,  columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private Date updatedAt;
     //private LocalDateTime updatedAt;
 

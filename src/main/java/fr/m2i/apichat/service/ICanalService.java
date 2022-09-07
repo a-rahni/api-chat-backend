@@ -15,4 +15,5 @@ public interface ICanalService {
     public void delete(Long id);
 
     public Message addMessage(Long idCanal, Long idUser, Message message);
+    public List<Message> getMessages(Long idCanal);
 }

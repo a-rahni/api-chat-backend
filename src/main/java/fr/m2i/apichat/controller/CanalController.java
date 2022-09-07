@@ -10,22 +10,28 @@ import fr.m2i.apichat.model.Canal;
 import fr.m2i.apichat.model.Message;
 import fr.m2i.apichat.response.ErrorResponseEntity;
 import fr.m2i.apichat.service.ICanalService;
+import fr.m2i.apichat.service.IMessageService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/v1/canaux")
 public class CanalController {
     private ICanalService canalService;
+    private IMessageService messageService;
 
     @Autowired
-    public CanalController(ICanalService canalService) {
+    public CanalController(ICanalService canalService, IMessageService messageService) {
         this.canalService = canalService;
+        this.messageService = messageService;
     }
 
     @GetMapping(produces= MediaType.APPLICATION_JSON_VALUE)
@@ -131,6 +137,50 @@ public class CanalController {
             return ErrorResponseEntity.build("Canal or user was not found", 404, "/v1/canaux/idcanal/iduser" , HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             return ErrorResponseEntity.build("An error occured", 500, "/v1/canaux/idcanal/iduser", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping(value = "/{id}/messages", produces = MediaType.APPLICATION_JSON_VALUE)
+    //@ApiOperation(value = "Return messages ", nickname = "Get messages by canal id", response = CanalDTO.class)
+    public ResponseEntity<Object> getMessagesPage(@PathVariable("id") String id,
+                                              @RequestParam(name="page", defaultValue="0") int page,
+                                              @RequestParam(name="size",defaultValue="5") int size){
+        try{
+            Long idCanal = Long.parseLong(id);
+            List<Message> messages = canalService.getMessages(idCanal);
+            List<MessageDTO> listDTO = messages.stream()
+                    .map(m->MessageMapper.buildMessageDTO(m)).collect(Collectors.toList());
+
+            return ResponseEntity.status(HttpStatus.OK).body(listDTO);
+
+//            Page<Message> messagesPage= messageService.findMessagesByCanalId(canal.getId(), page, size);
+//            List<MessageDTO> listm = messagesPage.stream().map(m->MessageMapper.buildMessageDTO(m)).collect(Collectors.toList());
+//            return ResponseEntity.status(HttpStatus.OK).
+//                    body(new PageImpl<MessageDTO>(listm,messagesPage.getPageable(),messagesPage.getTotalElements()));
+        }catch(NumberFormatException ne){
+            return ErrorResponseEntity.build("The parameter 'id' is not valid", 400, "/v1/canaux/" + id, HttpStatus.BAD_REQUEST);
+        } catch (NotFoundException nfe) {
+            return ErrorResponseEntity.build("Canal was not found", 404, "/v1/canaux/" + id, HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            System.out.println("****"+e.getMessage());
+            return ErrorResponseEntity.build("An error occured", 500, "/v1/canaux/" + id, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @DeleteMapping(value = "/{id}")
+    //@ApiOperation(value = "delete a canal", nickname = "Delete a canal by id", code = 204)
+    public ResponseEntity<Object> deleteCanalById(@PathVariable("id") String id){
+        try{
+            Long idCanal = Long.parseLong(id);
+            canalService.delete(idCanal);
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        }catch(NumberFormatException ne){
+            return ErrorResponseEntity.build("The parameter 'id' is not valid", 400, "/v1/canaux/" + id, HttpStatus.BAD_REQUEST);
+        } catch (NotFoundException nfe) {
+            return ErrorResponseEntity.build("Canal was not found", 404, "/v1/canaux/" + id, HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            System.out.println("****"+e.getMessage());
+            return ErrorResponseEntity.build("An error occured", 500, "/v1/canaux/" + id, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

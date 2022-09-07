@@ -1,6 +1,8 @@
 package fr.m2i.apichat.service;
 
 import fr.m2i.apichat.dto.CanalMapper;
+import fr.m2i.apichat.dto.MessageDTO;
+import fr.m2i.apichat.dto.MessageMapper;
 import fr.m2i.apichat.exception.AlreadyExistsException;
 import fr.m2i.apichat.exception.NotFoundException;
 import fr.m2i.apichat.model.Canal;
@@ -8,11 +10,16 @@ import fr.m2i.apichat.model.Message;
 import fr.m2i.apichat.model.User;
 import fr.m2i.apichat.repository.CanalRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class CanalService implements  ICanalService{
@@ -106,4 +113,14 @@ public class CanalService implements  ICanalService{
         }
         return null;
     }
+
+    public List<Message> getMessages(Long idCanal) {
+        Canal canal = findById(idCanal);
+        //List<Message> messages = messageService.findMessagesByCanalId(canal.getId());
+        return canal.getMessages();
+    }
+
+//        List<MessageDTO> listm = messagesPage.stream().map(m-> MessageMapper.buildMessageDTO(m)).collect(Collectors.toList());
+//        return ResponseEntity.status(HttpStatus.OK).
+//                body(new PageImpl<MessageDTO>(listm,messagesPage.getPageable(),messagesPage.getTotalElements()));
 }
