@@ -30,13 +30,13 @@ public class Canal {
     @Column(name="description")
     private String description;
 
-    @Temporal(TemporalType.TIMESTAMP) // on peut utiliser  @CreatedDate
+    @Temporal(TemporalType.DATE) // on peut utiliser  @CreatedDate
     @Column(name="created_at", nullable = false, updatable = false, columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private Date createdAt;
 
     @LastModifiedDate
-    @Column(name="updated_at", nullable = false)
-    private LocalDateTime updatedAt;
+    @Column(name="updated_at", updatable = true )
+    private Date updatedAt;
 
     @ManyToMany(mappedBy="canaux")
     private List<User> users=new ArrayList<>();

@@ -1,6 +1,5 @@
 package fr.m2i.apichat.service;
 
-import fr.m2i.apichat.dto.UserMapper;
 import fr.m2i.apichat.exception.NotFoundException;
 import fr.m2i.apichat.model.User;
 import fr.m2i.apichat.repository.UserRepository;
@@ -48,4 +47,6 @@ public class UserService implements IUserService{
         User found= findById(id);
         repo.delete(found);
     }
+
+
 }

@@ -1,6 +1,10 @@
 package fr.m2i.apichat.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -32,12 +36,14 @@ public class User {
         private String password;
 
         @ManyToMany
-        @JoinTable(name="user_channel",
+        @JoinTable(name="user_canal",
                    joinColumns = {@JoinColumn(name="user_id")},
                    inverseJoinColumns = {@JoinColumn(name="canal_id")}    )
+        @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
         private List<Canal> canaux=new ArrayList<>();
 
         @OneToMany(mappedBy = "user", fetch=FetchType.LAZY)
+        @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
         private List<Message> messages=new ArrayList<>();
 
 }
