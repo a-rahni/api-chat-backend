@@ -5,14 +5,18 @@ spring:
     password: cinema
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: create-drop
     show-sql: true
     generate-ddl: true
     database-platform: org.hibernate.dialect.MySQL8Dialect
     properties:
       hibernate:
         format_sql: true
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
 logging:
   level:
     root: info
-    org.hibernate.sql: INFO
+    org.hibernate.sql: DEBUG
+
