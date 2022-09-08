@@ -1,5 +1,8 @@
 package fr.m2i.apichat.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -29,19 +32,21 @@ public class Message {
     @Column(name="created_at", nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private Date createdAt;
 
-    @Temporal(TemporalType.TIME)
+   /* @Temporal(TemporalType.TIME)
     @Column(name="created_at_time", nullable = false, columnDefinition="TIME DEFAULT CURRENT_TIME")
-    private Date CreatedAtTime;
+    private Date CreatedAtTime;*/
 
     @LastModifiedDate
-    @Column(name="updated_at", nullable = false)
-    private LocalDateTime updatedAt;
+    @Column(name="updated_at", updatable = true)
+    private Date updatedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn (name="user_id", nullable = false)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @JoinColumn (name="canal_id", nullable = false)
     private Canal canal;
 
