@@ -5,6 +5,7 @@ import fr.m2i.apichat.model.Canal;
 import fr.m2i.apichat.service.ICanalService;
 import fr.m2i.apichat.service.IMessageService;
 import fr.m2i.apichat.service.IUserService;
+import io.swagger.annotations.ApiOperation;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -35,8 +36,9 @@ public class CanalController {
         this.canalService = canalService;
         this.modelMapper = modelMapper;
     }
-    @GetMapping
 
+    // fournit des informations relatives à cette opération (verbe + chemin)
+    @ApiOperation(value = "Renvoyer la listes des canaux ou un canal précis  ", nickname = "Get All channels or by name ", response = CanalDTO.class)
     public ResponseEntity<List<CanalDTO>> findAllCanaux(@RequestParam(required=false) String name ){
         log.info("find all canals");
         List<Canal> canaux = new ArrayList<Canal>();
@@ -57,6 +59,7 @@ public class CanalController {
 
 
     @PostMapping("/add")
+    @ApiOperation(value = "Ajouter un canal  ", nickname = "Send a canal ", response = CanalDTO.class)
     public ResponseEntity<CanalDTO> create(@RequestBody CanalDTO canalDto) throws ParseException {
         Canal canal=convertToEntity(canalDto);
         Canal canalCreated = canalService.addCanal(canal);
