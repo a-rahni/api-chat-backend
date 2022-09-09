@@ -20,3 +20,7 @@ logging:
     root: info
     org.hibernate.sql: DEBUG
 
+springfox:
+  documentation:
+    swagger-ui:
+      enabled: true
