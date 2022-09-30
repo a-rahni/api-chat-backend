@@ -1,7 +1,7 @@
 package fr.m2i.apichat.service;
 
-import fr.m2i.apichat.exception.CanalNotFoundException;
-import fr.m2i.apichat.exception.NotFoundException;
+import fr.m2i.apichat.exception.ApiRequestException;
+import fr.m2i.apichat.exception.ResourceNotFoundException;
 import fr.m2i.apichat.model.Canal;
 import fr.m2i.apichat.model.Message;
 import fr.m2i.apichat.model.User;
@@ -48,32 +48,38 @@ public class CanalService implements ICanalService {
 
     @Override
     public List<Canal> getCanals() {
+
         return canalRepo.findAll();
     }
 
 
     @Override
     public void deleteCanal(Long id) {
-        canalRepo.findById(id).orElseThrow(()->new CanalNotFoundException(id));
+        canalRepo.findById(id).orElseThrow(()->new ResourceNotFoundException(id));
         canalRepo.deleteById(id);
     }
 
     @Override
     public List<Canal> findByCanals(String canalName) {
-        return (List<Canal>) canalRepo.findByNameContaining(canalName);
+        return  canalRepo.findByNameContaining(canalName);
     }
 
     @Override
     public Canal findById(Long id) {
-        return canalRepo.findById(id).orElseThrow(()->new CanalNotFoundException(id));
+        return canalRepo.findById(id).orElseThrow(()->new ResourceNotFoundException(id));
     }
 
 
     @Override
-    public Canal addCanal(Canal canal) {
-        log.info("Saving new Canal to the database...");
+    public Canal addCanal(Canal canal) throws ApiRequestException {
+        Boolean existsCanal=canalRepo
+                .selectExistsCanal(canal.getName());
+        if(existsCanal){
+            throw new ApiRequestException("Le nom de canal existe déjà!");
+        }
         canal.setCreatedAt(new Date());
         canal.setUpdatedAt(new Date());
+        log.info("Saving new Canal to the database...");
         return canalRepo.save(canal);
     }
 

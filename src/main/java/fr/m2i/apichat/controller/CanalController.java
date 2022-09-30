@@ -1,46 +1,53 @@
 package fr.m2i.apichat.controller;
-
-import fr.m2i.apichat.dto.CanalDTO;
+import fr.m2i.apichat.dtos.CanalDto;
+import fr.m2i.apichat.exception.ApiRequestException;
+import fr.m2i.apichat.mappers.CanalMapper;
 import fr.m2i.apichat.model.Canal;
 import fr.m2i.apichat.service.ICanalService;
 import fr.m2i.apichat.service.IMessageService;
 import fr.m2i.apichat.service.IUserService;
 import io.swagger.annotations.ApiOperation;
-import lombok.Data;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.text.ParseException;
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+
 @Slf4j
-@CrossOrigin(origins = "http://localhost:8080") //Problème du front end
+
 @RestController
-@RequestMapping("/v1/canals")
+@CrossOrigin(origins = "http://localhost:8080")
+@RequestMapping("/v1/canaux")
 public class CanalController {
 
     private final IMessageService messageService;
     private final IUserService userService;
+
     private final ICanalService canalService;
-    private final ModelMapper modelMapper;
+
+
+    private final CanalMapper mapper;
     @Autowired
-    public CanalController(IMessageService messageService, IUserService userService, ICanalService canalService, ModelMapper modelMapper) {
+    public CanalController(IMessageService messageService, IUserService userService, ICanalService canalService, CanalMapper mapper) {
         this.messageService = messageService;
         this.userService = userService;
         this.canalService = canalService;
-        this.modelMapper = modelMapper;
+        this.mapper = mapper;
     }
 
     // fournit des informations relatives à cette opération (verbe + chemin)
-    @ApiOperation(value = "Renvoyer la listes des canaux ou un canal précis  ", nickname = "Get All channels or by name ", response = CanalDTO.class)
-    public ResponseEntity<List<CanalDTO>> findAllCanaux(@RequestParam(required=false) String name ){
-        log.info("find all canals");
+    @GetMapping
+    @ApiOperation(value = "Renvoyer la listes des canaux ou un canal précis  ", response = CanalDto.class)
+    public ResponseEntity<List<CanalDto>> findAllCanaux(@RequestParam(required=false) String name ){
+        log.info("find all canaux");
         List<Canal> canaux = new ArrayList<Canal>();
         if (name == null)
             canalService.getCanals().forEach(canaux::add);
@@ -50,20 +57,28 @@ public class CanalController {
         if (canaux.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        List<CanalDTO> canauxDTO=canaux.stream()
-                .map(this::convertToDto)
+        List<CanalDto> canauxDto=canaux.stream()
+                .map(mapper::canalToCanalDto)
                 .collect(Collectors.toList());
-        return new  ResponseEntity<>(canauxDTO,HttpStatus.OK);
+        return new  ResponseEntity<>(canauxDto,HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Retourner un canal by ID", response = CanalDto.class)
+    public ResponseEntity<Object> getCanalById(@PathVariable("id") String id){
+            Long idCanal = Long.parseLong(id);
+            Canal canal= canalService.findById(idCanal);
+            return new ResponseEntity<>(mapper.canalToCanalDto(canal),HttpStatus.OK);
+
     }
 
 
 
-    @PostMapping("/add")
-    @ApiOperation(value = "Ajouter un canal  ", nickname = "Send a canal ", response = CanalDTO.class)
-    public ResponseEntity<CanalDTO> create(@RequestBody CanalDTO canalDto) throws ParseException {
-        Canal canal=convertToEntity(canalDto);
-        Canal canalCreated = canalService.addCanal(canal);
-        return new ResponseEntity<CanalDTO>(convertToDto(canalCreated),HttpStatus.CREATED);
+    @PostMapping
+    @ApiOperation(value = "Créer un canal  ", nickname = "Create canal ", response = CanalDto.class)
+    public ResponseEntity<CanalDto> create(@RequestBody @Valid @NonNull CanalDto canalDto) throws ApiRequestException {
+        Canal toCreate=canalService.addCanal(mapper.canalDtoToCanal(canalDto));
+        return new ResponseEntity<CanalDto>(mapper.canalToCanalDto(toCreate),HttpStatus.CREATED);
     }
 
 
@@ -76,9 +91,13 @@ public class CanalController {
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<Canal> update(@PathVariable("id") Long id, @RequestBody Canal canal) throws ParseException {
-        Canal _canal = canalService.findById(id);
-        return  new ResponseEntity<>(_canal,HttpStatus.OK);
+    public ResponseEntity<CanalDto> update(@PathVariable("id") Long id, @RequestBody @Valid CanalDto canalDto)  {
+        if(canalDto.getId()== null)
+            throw new ApiRequestException("Problème Id ");
+        Canal canal = canalService.findById(canalDto.getId());
+        Canal _canal=mapper.updateCanalFromCanalDto(canalDto,canal);
+        canalService.updateCanal(_canal);
+        return  new ResponseEntity<>(mapper.canalToCanalDto(_canal),HttpStatus.OK);
     }
 
 
@@ -88,19 +107,6 @@ public class CanalController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    private CanalDTO  convertToDto(Canal canal) {
-        CanalDTO canalDTO=modelMapper.map(canal,CanalDTO.class);
-        return canalDTO;
-    }
-    private Canal convertToEntity(CanalDTO canalDto) throws ParseException {
-        Canal canal = modelMapper.map(canalDto, Canal.class);
-        return canal;
-    }
 
-}
-@Data
-class MessageForm{
-    private String username;;
-    private String text;
 }
 
