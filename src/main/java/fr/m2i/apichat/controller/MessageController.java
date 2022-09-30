@@ -41,28 +41,23 @@ public class MessageController {
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<Object> getMessages(
-            @PathVariable(value = "page", required = false) Integer page,
-            @PathVariable(value = "size",required = false) Integer size,
-            @PathVariable(value = "sortDir",required = false) String sortDir,
-            @PathVariable(value = "sort",required = false) String sort,
             @RequestParam("username") String username,
             @RequestParam("canal") String canal){
         log.info(" canal={} username={} ",canal,username );
-        List<Message> messages = messageService.findMessageUserCanal(1, 10,username,canal);
-
+        List<Message> messages = messageService.findMessageUserCanal(username,canal);
         return ResponseEntity.status(HttpStatus.OK).body(messages);
     }
 
 
     @GetMapping(value = "/{id}")
     @ResponseBody
-    public Message getPost(@PathVariable("id") Long id) {
+    public Message getMessage(@PathVariable("id") Long id) {
         return messageService.getMessageById(id);
     }
 
     @PutMapping(value = "/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public void updatePost(@PathVariable("id") Long id, @RequestBody Message message) throws ParseException {
+    public void updateMessage(@PathVariable("id") Long id, @RequestBody Message message) throws ParseException {
         if(!Objects.equals(id, message.getId())){
             throw new IllegalArgumentException("Id non compatible");
         }

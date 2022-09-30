@@ -17,8 +17,6 @@ import java.util.List;
 @Repository
 public interface MessageRepository extends JpaRepository<Message,Long>, PagingAndSortingRepository<Message, Long>, JpaSpecificationExecutor<Message> {
 
-   /* @Query("select distinct m from Message m where m.user.username=:username and m.canal.name=:canal")
-    Page<Message> findAllMessage(@Param("username") String username, @Param("canal") String canal,Pageable pageReq);*/
    @Query("select  m from Message m join m.user u join m.canal c where u.username=:username and c.name=:canal")
    List<Message> findAllMessage(@Param("username") String username, @Param("canal") String canal);
 

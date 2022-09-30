@@ -1,7 +1,7 @@
 package fr.m2i.apichat.configuration;
 
 import com.fasterxml.classmate.TypeResolver;
-import fr.m2i.apichat.dto.ErrorDTO;
+import fr.m2i.apichat.exception.ApiException;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
@@ -24,9 +24,9 @@ public class SpringFoxConfig extends WebMvcConfigurationSupport {
                 // Do not automatically add 401, 403 and 404 responses to every operation
                 .useDefaultResponseMessages(false)
                 // Since this isn't explicitly mentioned in any Controller, we have to add it manually
-                .additionalModels(tr.resolve(ErrorDTO.class))
+                .additionalModels(tr.resolve(ApiException.class))
                 .select()
-                .apis(RequestHandlerSelectors.basePackage(fr.m2i.apichat.ApichatApplication.class.getPackage().getName()))
+                .apis(RequestHandlerSelectors.basePackage("fr.m2i.apichat.controller"))
                 .paths(PathSelectors.any())
                 .build();
     }
@@ -36,9 +36,9 @@ Générer des informations d'interface ,Y compris le titre,Contacts, etc.
 */
     private ApiInfo metadata() {
         return new ApiInfoBuilder()
-                .title(" API-chat Backend  certification M2I  ")
+                .title(" API-chat Backend  certification M2I  Christian et  Rahni  ")
                 .description("En cas de doute,Contact possible")
-                .contact(new Contact("Api-Chat Christian Rahni","https://****","contact@m2i.fr"))
+                .contact(new Contact("Api-Chat","http://","contact@m2i.fr"))
                 .version("1.0")
                 .build();
     }

@@ -1,6 +1,5 @@
 package fr.m2i.apichat.service;
-
-import fr.m2i.apichat.exception.NotFoundException;
+import fr.m2i.apichat.exception.ResourceNotFoundException;
 import fr.m2i.apichat.model.User;
 import fr.m2i.apichat.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,9 +23,8 @@ public class UserService implements IUserService{
 
     @Override
     public User findById(Long id) {
-        return repo.findById(id).orElseThrow(()->
-        {throw new NotFoundException("User with id: " +id+ " was not found");
-        });
+        return repo.findById(id).orElseThrow(()->new ResourceNotFoundException(id));
+
     }
 
     @Override

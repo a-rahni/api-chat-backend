@@ -28,18 +28,14 @@ public class MessageService implements IMessageService{
         this.userService = userService;
     }
     @Override
-    public List<Message> findMessageUserCanal(int page, int size,String username,String canal) {
-        PageRequest pageReq
-                = PageRequest.of(page, size);
-        log.info("page={}  size={} username={} canal={}",page,size,username,canal);
+    public List<Message> findMessageUserCanal(String username,String canal) {
+        log.info("username={} canal={}",username,canal);
         List<Message> messages= messageRepo.findAllMessage(username,canal);
-        //Page<Message> messages=messageRepo.findAllByCanalAndUser(canalRepository.findByName(canal),userRepo.findByUsername("username"),pageReq);
         return messages;
     }
 
     @Override
     public List<Message> findAll() {
-
         return  messageRepo.findAll();
     }
 

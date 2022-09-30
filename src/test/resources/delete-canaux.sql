@@ -1,0 +1,1 @@
+DELETE FROM canaux where canaux.name in('General','Room 1');

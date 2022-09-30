@@ -7,9 +7,12 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.validator.constraints.Length;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Date;
 
@@ -19,12 +22,13 @@ import java.util.Date;
 @Setter
 @Entity
 @Table(name="messages")
-public class Message {
+public class Message implements Serializable {
 
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
 
+    @NotNull(message = "Message ne peut pas être vide")
     @Column(name="content", nullable = false, columnDefinition = "TEXT")
     private String content;
 
@@ -40,7 +44,8 @@ public class Message {
     @Column(name="updated_at", updatable = true)
     private Date updatedAt;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn (name="user_id", nullable = false)
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private User user;
