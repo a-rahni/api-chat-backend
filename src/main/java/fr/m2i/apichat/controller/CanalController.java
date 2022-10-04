@@ -11,6 +11,7 @@ import fr.m2i.apichat.model.Message;
 import fr.m2i.apichat.response.ErrorResponseEntity;
 import fr.m2i.apichat.service.ICanalService;
 import fr.m2i.apichat.service.IMessageService;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -35,7 +36,7 @@ public class CanalController {
     }
 
     @GetMapping(produces= MediaType.APPLICATION_JSON_VALUE)
-    //@ApiOperation(value = "Returns the list of all channel", nickname = "Get all channel", response = CanalDTO.class)
+    @ApiOperation(value = "Returns the list of all channel", nickname = "Get all channel", response = CanalDTO.class)
     public ResponseEntity<Object> getAllCanals(){
         List<Canal> canaux = canalService.findAll();
         List<CanalDTO> dtos = CanalMapper.buidListCanalDTO(canaux);
@@ -43,7 +44,7 @@ public class CanalController {
     }
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    //@ApiOperation(value = "Return a canal", nickname = "Get a canal by id", response = CanalDTO.class)
+    @ApiOperation(value = "Return a canal", nickname = "Get a canal by id", response = CanalDTO.class)
     public ResponseEntity<Object> getCanalById(@PathVariable("id") String id){
         try{
             Long idCanal = Long.parseLong(id);
@@ -59,7 +60,7 @@ public class CanalController {
     }
 
     @GetMapping(value = "/search", produces = MediaType.APPLICATION_JSON_VALUE)
-    //@ApiOperation(value = "Return a canal", nickname = "Get a canal by name", response = CanalDTO.class)
+    @ApiOperation(value = "Return a canal", nickname = "Get a canal by name", response = CanalDTO.class)
     public ResponseEntity<Object> getCanalByName(@RequestParam(name="name",defaultValue = "") String name ){
         try{
             Canal canal= canalService.findByName(name);
@@ -74,7 +75,7 @@ public class CanalController {
     @PostMapping(
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    //@ApiOperation(value = "Create a canal", nickname = "Create a canal", response = CanalDTO.class)
+    @ApiOperation(value = "Create a canal", nickname = "Create a canal", response = CanalDTO.class)
     public ResponseEntity<Object> createCanal(@RequestBody CanalDTO canalDto) {
 
         try {
@@ -93,7 +94,7 @@ public class CanalController {
     @PutMapping(value="/{id}",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    //@ApiOperation(value = "update a canal", nickname = "Update a canal by id", response = CanalDTO.class)
+    @ApiOperation(value = "update a canal", nickname = "Update a canal by id", response = CanalDTO.class)
     public ResponseEntity<Object> updateCanal(@PathVariable("id") String id, @RequestBody CanalDTO canalDto) {
 
         try {
@@ -117,7 +118,7 @@ public class CanalController {
     @PostMapping(value="/{idcanal}/{iduser}",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    //@ApiOperation(value = "add a message", nickname = "Create a message by channel and user id", response = MessageDTO.class)
+    @ApiOperation(value = "add a message", nickname = "Create a message by channel and user id", response = MessageDTO.class)
     public ResponseEntity<Object> addMessage(@PathVariable("idcanal") String idcanal,
                                              @PathVariable("iduser") String iduser,
                                              @RequestBody MessageDTO messageDto) {
@@ -141,7 +142,7 @@ public class CanalController {
     }
 
     @GetMapping(value = "/{id}/messages", produces = MediaType.APPLICATION_JSON_VALUE)
-    //@ApiOperation(value = "Return messages ", nickname = "Get messages by canal id", response = CanalDTO.class)
+    @ApiOperation(value = "Return messages ", nickname = "Get messages by canal id", response = CanalDTO.class)
     public ResponseEntity<Object> getMessagesPage(@PathVariable("id") String id,
                                               @RequestParam(name="page", defaultValue="0") int page,
                                               @RequestParam(name="size",defaultValue="5") int size){
@@ -168,7 +169,7 @@ public class CanalController {
     }
 
     @DeleteMapping(value = "/{id}")
-    //@ApiOperation(value = "delete a canal", nickname = "Delete a canal by id", code = 204)
+    @ApiOperation(value = "delete a canal", nickname = "Delete a canal by id", code = 204)
     public ResponseEntity<Object> deleteCanalById(@PathVariable("id") String id){
         try{
             Long idCanal = Long.parseLong(id);

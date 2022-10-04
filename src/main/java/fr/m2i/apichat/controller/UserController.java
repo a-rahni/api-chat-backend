@@ -9,6 +9,7 @@ import fr.m2i.apichat.model.Canal;
 import fr.m2i.apichat.model.User;
 import fr.m2i.apichat.response.ErrorResponseEntity;
 import fr.m2i.apichat.service.IUserService;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -28,7 +29,7 @@ public class UserController {
     }
 
     @GetMapping()
-    //@ApiOperation(value = "Returns the list of all users", nickname = "Get all users", response = UserDTO.class)
+    @ApiOperation(value = "Returns the list of all users", nickname = "Get all users", response = UserDTO.class)
     public ResponseEntity<Object> getAllUsers(){
         List<User> users = userService.findAll();
         List< UserDTO> usersDTO = UserMapper.buidListUserDTO(users);
@@ -44,7 +45,7 @@ public class UserController {
     @PostMapping(
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    //@ApiOperation(value = "Create a user", nickname = "Create a user", response = UserDTO.class)
+    @ApiOperation(value = "Create a user", nickname = "Create a user", response = UserDTO.class)
     public ResponseEntity<Object> createUser(@RequestBody UserDTO userDto) {
 
         try {
