@@ -9,6 +9,7 @@ import fr.m2i.apichat.model.Canal;
 import fr.m2i.apichat.model.Message;
 import fr.m2i.apichat.response.ErrorResponseEntity;
 import fr.m2i.apichat.service.IMessageService;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -28,7 +29,7 @@ public class MessageController {
     @PutMapping(value="/{id}",
                 consumes = MediaType.APPLICATION_JSON_VALUE,
                 produces=MediaType.APPLICATION_JSON_VALUE)
-    //@ApiOperation(value = "update a message", nickname = "update a message by id", response = MessageDTO.class)
+    @ApiOperation(value = "update a message", nickname = "update a message by id", response = MessageDTO.class)
     public ResponseEntity<Object> updateMessage(@PathVariable("id") String id, @RequestBody MessageDTO messageDto){
 
         try {
@@ -50,7 +51,7 @@ public class MessageController {
     }
 
     @DeleteMapping(value = "/{id}")
-    //@ApiOperation(value = "delete a message", nickname = "Delete a message by id", code = 204)
+    @ApiOperation(value = "delete a message", nickname = "Delete a message by id", code = 204)
     public ResponseEntity<Object> deleteCanalById(@PathVariable("id") String id){
         try{
             Long idCanal = Long.parseLong(id);
