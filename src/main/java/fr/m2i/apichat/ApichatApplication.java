@@ -13,7 +13,7 @@ public class ApichatApplication {
 		SpringApplication.run(ApichatApplication.class, args);
 	}
 	// Bean Initialisation des données
-	@Bean
+	//@Bean
 	CommandLineRunner run(ServiceInitDB serviceInitDB) {
 		return args -> {
 
