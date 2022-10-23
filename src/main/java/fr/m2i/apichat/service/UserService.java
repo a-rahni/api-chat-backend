@@ -45,7 +45,7 @@ public class UserService implements IUserService{
         }
 
         if(userWithName != null || userWithEmail!=null){
-            throw new AlreadyExistsException(" username or email already used");
+            throw new AlreadyExistsException("username or email already used");
         }
         return repo.save(user);
     }
